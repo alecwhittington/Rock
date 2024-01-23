@@ -25,6 +25,7 @@ using Rock.Cms.ContentCollection;
 using Rock.Cms.ContentCollection.Attributes;
 using Rock.Data;
 using Rock.Model;
+using Rock.Utility.Settings;
 
 namespace Rock.Web.Cache
 {
@@ -610,6 +611,13 @@ namespace Rock.Web.Cache
                 return Get( entityTypeId );
             }
 
+            // In rare situations, including unit tests, we can get called
+            // before the database is ready.
+            if ( !RockInstanceConfig.DatabaseIsAvailable )
+            {
+                return null;
+            }
+
             EntityTypeCache entityType = null;
 
             if ( rockContext != null )
@@ -670,6 +678,13 @@ namespace Rock.Web.Cache
             if ( EntityTypes.TryGetValue( name, out entityTypeId ) )
             {
                 return Get( entityTypeId );
+            }
+
+            // In rare situations, including unit tests, we can get called
+            // before the database is ready.
+            if ( !RockInstanceConfig.DatabaseIsAvailable )
+            {
+                return null;
             }
 
             if ( rockContext != null )
