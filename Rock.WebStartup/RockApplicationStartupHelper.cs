@@ -646,7 +646,7 @@ namespace Rock.WebStartup
                 return result;
             }
 
-            var configConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["RockContext"]?.ConnectionString;
+            var configConnectionString = RockInstanceConfig.Database.ConnectionString;
 
             try
             {
