@@ -20,6 +20,12 @@ using Rock.Lava;
 using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Rock.Web.Cache;
+using Rock.Lava.Fluid;
+using Rock.Tests.Shared;
+using Rock.Model;
+using Rock.Data;
+using System.Linq;
+using System;
 
 namespace Rock.Tests.Integration.Core.Lava
 {
@@ -29,6 +35,8 @@ namespace Rock.Tests.Integration.Core.Lava
     [TestClass]
     public class CacheTests : LavaIntegrationTestBase
     {
+        #region Cache Block
+
         [TestMethod]
         public void CacheBlock_CommandNotEnabled_ReturnsConfigurationErrorMessage()
         {
@@ -296,7 +304,7 @@ CacheValue={cache2},Key=key4,Tag=undefined,tag2<br>
             TestHelper.ExecuteForActiveEngines( ( engine ) =>
             {
                 // Clear the cache for the current engine.
-                RockCache.ClearAllCachedItems(); 
+                RockCache.ClearAllCachedItems();
 
                 // Render the template with value 1. The cache block output should be added to the cache.
                 mergeFields["i"] = "1";
@@ -330,5 +338,149 @@ CacheValue={cache2},Key=key4,Tag=undefined,tag2<br>
             } );
 
         }
+
+        #endregion
+
+        #region CreateEntitySet filter
+
+        [TestMethod]
+        public void CreateEntitySet_DocumentationExample1_ReturnsExpectedOutput()
+        {
+            var inputTemplate = @"
+{% person where:'LastName == ""Decker""' select:'Id' iterator:'personIds' limit:4 %}
+{% assign personIdList = personIds %}
+{% endperson %} 
+{% entitytype where:'FriendlyName == ""Person""' %}
+{% assign entityTypeId = entitytype.Id %}
+{% endentitytype %}
+{% assign entitySet = personIdList | CreateEntitySet:'DeckerSet1',entityTypeId,5,'Person Merge Request','Test note.','' %}
+The Entity Set ""{{ entitySet.Name }}"" (Id={{ entitySet.Id }}) was created and {{ personIdList | Size }} people have been added.
+";
+
+            var expectedOutput = @"
+The Entity Set ""DeckerSet1"" (Id=*) was created and 4 people have been added.
+";
+
+            var options = new LavaTestRenderOptions { EnabledCommands = "rockentity", Wildcards = new List<string>() { "*" } };
+            TestHelper.AssertTemplateOutput( typeof( FluidEngine ), expectedOutput, inputTemplate, options );
+        }
+
+        [TestMethod]
+        public void CreateEntitySet_WithExpiryInMinutes_ReturnsCorrectlyConfiguredEntitySet()
+        {
+            var expectedExpiry = RockDateTime.Now.AddMinutes( 7 );
+
+            var entitySet = CreateTestEntitySetWithOptions( 7, null, null, null );
+            Assert.That.AreProximate( expectedExpiry, entitySet.ExpireDateTime, new TimeSpan( 0, 1, 0 ) );
+        }
+
+        [TestMethod]
+        public void CreateEntitySet_WithDefinedPurpose_ReturnsCorrectlyConfiguredEntitySet()
+        {
+            var definedValueId = DefinedValueCache.GetId( SystemGuid.DefinedValue.ENTITY_SET_PURPOSE_PERSON_MERGE_REQUEST.AsGuid() );
+
+            var entitySet = CreateTestEntitySetWithOptions( purposeId: definedValueId );
+            Assert.That.AreEqual( definedValueId, entitySet.EntitySetPurposeValueId.GetValueOrDefault() );
+        }
+
+        [TestMethod]
+        public void CreateEntitySet_WithNote_ReturnsCorrectlyConfiguredEntitySet()
+        {
+            var note = "Test note.";
+
+            var entitySet = CreateTestEntitySetWithOptions( note: note );
+            Assert.That.AreEqual( note, entitySet.Note );
+        }
+
+        [TestMethod]
+        public void CreateEntitySet_WithParentSet_ReturnsCorrectlyConfiguredEntitySet()
+        {
+            var entitySetParent = CreateTestEntitySetWithOptions();
+            var entitySetChild = CreateTestEntitySetWithOptions( parentSetId: entitySetParent.Id );
+
+            Assert.That.AreEqual( entitySetParent.Id, entitySetChild.ParentEntitySetId );
+        }
+
+        private EntitySet CreateTestEntitySetWithOptions( int? expiryInMinutes = null, int? purposeId = null, string note = null, int? parentSetId = null )
+        {
+            var inputTemplate = @"
+{% assign entitySet = '$idList' | CreateEntitySet:$args %}
+{{ entitySet.Id }}
+";
+
+            var personList = GetTestPersonEntityList();
+
+            var personIdList = personList.Select( p => p.Id )
+                .ToList()
+                .AsDelimited( "," );
+            var personEntityTypeId = EntityTypeCache.GetId( typeof( Rock.Model.Person ) );
+
+            var setName = $"Test Set {Guid.NewGuid()}";
+
+            var args = new List<string>
+            {
+                $"'{setName}'",
+                personEntityTypeId.ToString(),
+                expiryInMinutes.GetValueOrDefault(20).ToStringSafe(),
+                $"'{purposeId.ToStringSafe()}'",
+                $@"'{note}'",
+                parentSetId.ToStringSafe()
+            };
+
+            inputTemplate = inputTemplate.Replace( "$idList", personIdList );
+            inputTemplate = inputTemplate.Replace( "$args", args.AsDelimited( "," ).TrimEnd( ',' ) );
+
+            var options = new LavaTestRenderOptions
+            {
+                EnabledCommands = "rockentity",
+                Wildcards = new List<string>() { "*" }
+            };
+            var output = TestHelper.GetTemplateOutput( typeof( FluidEngine ), inputTemplate, options );
+
+            var entitySetId = output.ConvertToIntegerOrThrow();
+
+            // Get the entity set.
+            var rockContext = new RockContext();
+            var entitySetService = new EntitySetService( rockContext );
+
+            var entitySet = entitySetService.Get( entitySetId );
+            return entitySet;
+        }
+
+        [TestMethod]
+        public void CreateEntitySet_WithEntityListAsInput_ReturnsExpectedOutput()
+        {
+            var inputTemplate = @"
+{% person where:'LastName == ""Decker""' iterator:'personEntities' limit:4 %}
+{% assign entitySet = personEntities | CreateEntitySet:'DeckerSet1' %}
+{% endperson %} 
+The Entity Set ""{{ entitySet.Name }}"" (Id={{ entitySet.Id }}) was created and {{ entitySet.Items | Size }} people have been added.
+";
+            var expectedOutput = @"
+The Entity Set ""DeckerSet1"" (Id=*) was created and 4 people have been added.
+";
+
+            var options = new LavaTestRenderOptions { EnabledCommands = "rockentity", Wildcards = new List<string>() { "*" } };
+            TestHelper.AssertTemplateOutput( typeof( FluidEngine ), expectedOutput, inputTemplate, options );
+        }
+
+        private List<Person> GetTestPersonEntityList()
+        {
+            var rockContext = new RockContext();
+            var personService = new PersonService( rockContext );
+
+            var personTedDecker = personService.GetByIdentifierOrThrow( TestGuids.TestPeople.TedDecker );
+            var personBillMarble = personService.GetByIdentifierOrThrow( TestGuids.TestPeople.BillMarble );
+            var personMaddie = personService.GetByIdentifierOrThrow( TestGuids.TestPeople.MaddieLowe );
+
+            var personList = new List<Person>
+            {
+                personTedDecker, personBillMarble, personMaddie
+            };
+
+            return personList;
+        }
+
+        #endregion
     }
 }
