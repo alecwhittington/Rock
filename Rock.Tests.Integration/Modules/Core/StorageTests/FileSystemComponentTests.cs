@@ -38,7 +38,6 @@ namespace Rock.Tests.Integration.Core.Storage
     /// https://stackoverflow.com/questions/3738819/do-mstest-deployment-items-only-work-when-present-in-the-project-test-settings-f?rq=1
     /// </remarks>
     [TestClass]
-    [DeploymentItem( @"app.ConnectionStrings.config" )]
     [DeploymentItem( @"TestData\", "TestData" )]
     public class FileSystemComponentTests
     {
