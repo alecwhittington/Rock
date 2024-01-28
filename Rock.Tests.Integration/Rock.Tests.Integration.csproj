@@ -282,7 +282,6 @@
     <Compile Include="Modules\Core\Lava\Engine\ExceptionHandlingTests.cs" />
     <Compile Include="Modules\Core\Lava\Engine\ScopeTests.cs" />
     <Compile Include="Modules\Core\Lava\Engine\ParallelExecutionTests.cs" />
-    <Compile Include="Modules\Core\Lava\FileSystem\MockFileProvider.cs" />
     <Compile Include="Modules\Core\Lava\Filters\EncodingFilterTests.cs" />
     <Compile Include="Modules\Core\Lava\Filters\AttributeFilterTests.cs" />
     <Compile Include="Modules\Core\Lava\Filters\EntityFilterTests.cs" />
@@ -295,9 +294,7 @@
     <Compile Include="Modules\Core\Lava\Filters\DateFilterTests.cs" />
     <Compile Include="Modules\Core\Lava\Filters\NumericFilterTests.cs" />
     <Compile Include="Modules\Core\Lava\FileSystem\LavaFileSystemTests.cs" />
-    <Compile Include="Modules\Core\Lava\LavaIntegrationTestHelper.cs" />
     <Compile Include="Modules\Core\Lava\LavaIntegrationTestBase.cs" />
-    <Compile Include="Modules\Core\Lava\FileSystem\MockFileInfo.cs" />
     <Compile Include="Modules\Core\Lava\Commands\ShortcodeCodeTests.cs" />
     <Compile Include="Modules\Core\Lava\Commands\CommandTests.cs" />
     <Compile Include="Modules\Core\Lava\Commands\ShortcodeTemplateTests.cs" />

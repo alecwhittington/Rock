@@ -1157,33 +1157,4 @@ namespace Rock.Tests.Shared.Lava
         #endregion
 
     }
-
-    /// <summary>
-    /// A set of options for testing the rendering of a Lava template.
-    /// </summary>
-    public class LavaTestRenderOptions
-    {
-        public IDictionary<string, object> MergeFields = null;
-        public string EnabledCommands = null;
-        public string EnabledCommandsDelimiter = ",";
-
-        public bool IgnoreWhiteSpace = true;
-        public bool IgnoreCase = false;
-
-        public List<string> Wildcards = new List<string>();
-
-        public LavaTestOutputMatchTypeSpecifier OutputMatchType = LavaTestOutputMatchTypeSpecifier.Equal;
-
-        public ExceptionHandlingStrategySpecifier? ExceptionHandlingStrategy;
-
-        public List<Type> LavaEngineTypes = new List<Type>();
-    }
-
-    public enum LavaTestOutputMatchTypeSpecifier
-    {
-        Equal = 0,
-        Contains = 1,
-        DoesNotContain = 2,
-        RegEx = 3
-    }
 }

@@ -151,6 +151,8 @@
   <ItemGroup>
     <Compile Include="Constants\Constants.cs" />
     <Compile Include="Constants\TestGuids.cs" />
+    <Compile Include="Lava\LavaTestOutputMatchTypeSpecifier.cs" />
+    <Compile Include="Lava\LavaTestRenderOptions.cs" />
     <Compile Include="Lava\MockFileInfo.cs" />
     <Compile Include="Lava\MockFileProvider.cs" />
     <Compile Include="Lava\NullTemplateCacheService.cs" />
