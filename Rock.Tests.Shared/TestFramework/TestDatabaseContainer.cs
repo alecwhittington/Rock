@@ -66,9 +66,9 @@ namespace Rock.Tests.Shared.TestFramework
         {
             if ( _databaseContainer != null )
             {
+                RockCache.ClearAllCachedItems( false );
                 RockInstanceConfig.SetDatabaseIsAvailable( false );
                 RockInstanceConfig.Database.SetConnectionString( string.Empty );
-                RockCache.ClearAllCachedItems( false );
 
                 await _databaseContainer.DisposeAsync().AsTask();
             }

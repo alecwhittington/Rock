@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Data.Entity.Infrastructure;
 using System.Data.SqlClient;
 using System.Linq;
@@ -10,7 +11,11 @@ using Docker.DotNet.Models;
 
 using DotNet.Testcontainers.Containers;
 
+using Rock.Model;
+using Rock.Tests.Shared.Lava;
+using Rock.Utility;
 using Rock.Utility.Settings;
+using Rock.Web;
 
 using Testcontainers.MsSql;
 
@@ -62,6 +67,7 @@ namespace Rock.Tests.Shared.TestFramework
         private static async Task BuildContainerAsync( MsSqlContainer container )
         {
             var connectionString = container.GetConnectionString();
+            var sampleDataUrl = ConfigurationManager.AppSettings["SampleDataUrl"];
 
             using ( var connection = new SqlConnection( connectionString ) )
             {
@@ -69,13 +75,21 @@ namespace Rock.Tests.Shared.TestFramework
 
                 await CreateDatabaseAsync( connection, "Rock" );
 
-                var csb = new SqlConnectionStringBuilder( connectionString );
-                csb.InitialCatalog = "Rock";
+                var csb = new SqlConnectionStringBuilder( connectionString )
+                {
+                    InitialCatalog = "Rock"
+                };
 
                 RockInstanceConfig.Database.SetConnectionString( csb.ConnectionString );
                 RockInstanceConfig.SetDatabaseIsAvailable( true );
 
                 MigrateDatabase( csb.ConnectionString );
+
+                // Install the sample data if it is configured.
+                if ( sampleDataUrl.IsNotNullOrWhiteSpace() )
+                {
+                    AddSampleData( sampleDataUrl );
+                }
 
                 RockInstanceConfig.SetDatabaseIsAvailable( false );
                 RockInstanceConfig.Database.SetConnectionString( string.Empty );
@@ -139,6 +153,70 @@ ALTER DATABASE [{dbName}] SET RECOVERY SIMPLE";
                 .Select( a => a.Id.Substring( 0, 15 ) )
                 .OrderByDescending( a => a )
                 .First();
+        }
+
+        /// <summary>
+        /// Adds the sample data to the currently configured database container.
+        /// </summary>
+        /// <param name="sampleDataUrl">The URL to get the sample data from.</param>
+        private static void AddSampleData( string sampleDataUrl )
+        {
+            TestHelper.Log( "Loading sample data..." );
+
+            // Initialize the Lava Engine first, because it is needed by
+            // the sample data loader..
+            LavaIntegrationTestHelper.Initialize( testRockLiquidEngine: false, testDotLiquidEngine: false, testFluidEngine: true, loadShortcodes: false );
+            LavaIntegrationTestHelper.GetEngineInstance( typeof( Rock.Lava.Fluid.FluidEngine ) );
+            Rock.Lava.LavaService.RockLiquidIsEnabled = false;
+
+            // Make sure all Entity Types are registered.
+            // This is necessary because some components are only registered at runtime,
+            // including the Rock.Bus.Transport.InMemory Type that is required to start the Rock Message Bus.
+            EntityTypeService.RegisterEntityTypes();
+
+            var factory = new SampleDataManager();
+            var args = new SampleDataManager.SampleDataImportActionArgs
+            {
+                FabricateAttendance = true,
+                EnableGiving = true,
+                Password = "password",
+                RandomizerSeed = 42283823
+            };
+
+            factory.CreateFromXmlDocumentFile( sampleDataUrl, args );
+
+            // Run Rock Jobs to ensure calculated fields are updated.
+
+            // Rock Cleanup
+            ExecuteRockJob<Rock.Jobs.RockCleanup>();
+            ExecuteRockJob<Rock.Jobs.CalculateFamilyAnalytics>();
+            ExecuteRockJob<Rock.Jobs.ProcessBIAnalytics>( new Dictionary<string, string>
+            {
+                [Rock.Jobs.ProcessBIAnalytics.AttributeKey.ProcessPersonBIAnalytics] = "true",
+                [Rock.Jobs.ProcessBIAnalytics.AttributeKey.ProcessFamilyBIAnalytics] = "true",
+                [Rock.Jobs.ProcessBIAnalytics.AttributeKey.ProcessAttendanceBIAnalytics] = "true"
+            } );
+            ExecuteRockJob<Rock.Jobs.PostV141UpdateValueAsColumns>();
+
+            // Set the sample data identifiers.
+            SystemSettings.SetValue( SystemKey.SystemSetting.SAMPLEDATA_DATE, RockDateTime.Now.ToString() );
+
+            TestHelper.Log( $"Sample Data loaded." );
+        }
+
+        /// <summary>
+        /// Executes the job with the given attribute value settings.
+        /// </summary>
+        /// <typeparam name="TJob">The job class to be executed.</typeparam>
+        /// <param name="settings">The settings to pass to the job.</param>
+        private static void ExecuteRockJob<TJob>( Dictionary<string, string> settings = null )
+            where TJob : Rock.Jobs.RockJob, new()
+        {
+            var job = new TJob();
+
+            TestHelper.Log( $"Job Started: {typeof( TJob ).Name}..." );
+            job.ExecuteInternal( settings ?? new Dictionary<string, string>() );
+            TestHelper.Log( $"Job Completed: {typeof( TJob ).Name}..." );
         }
 
         /// <summary>
