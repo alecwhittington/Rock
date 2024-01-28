@@ -22,6 +22,7 @@ using Rock.Lava;
 using Rock.Lava.RockLiquid;
 using Rock.Model;
 using Rock.Tests.Shared;
+using Rock.Tests.Shared.Lava;
 
 namespace Rock.Tests.Integration.Core.Lava
 {

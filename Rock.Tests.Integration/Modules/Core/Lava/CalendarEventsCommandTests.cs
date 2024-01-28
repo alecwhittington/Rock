@@ -23,6 +23,7 @@ using Rock.Lava;
 using Rock.Model;
 using Rock.Tests.Integration.Events;
 using Rock.Tests.Shared;
+using Rock.Tests.Shared.Lava;
 using Rock.Web.Cache;
 
 namespace Rock.Tests.Integration.Core.Lava

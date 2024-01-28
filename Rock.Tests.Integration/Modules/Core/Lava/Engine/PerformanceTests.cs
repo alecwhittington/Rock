@@ -23,6 +23,7 @@ using Rock.Data;
 using System.Linq;
 using Rock.Tests.Shared;
 using Rock.Lava.Fluid;
+using Rock.Tests.Shared.Lava;
 
 namespace Rock.Tests.Integration.Core.Lava
 {

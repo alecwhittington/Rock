@@ -20,6 +20,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Rock.Data;
 using Rock.Lava;
 using Rock.Model;
+using Rock.Tests.Shared.Lava;
 
 namespace Rock.Tests.Integration.Core.Lava
 {

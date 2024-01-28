@@ -21,6 +21,7 @@ using System.Threading.Tasks;
 using System.Diagnostics;
 using Rock.Lava.RockLiquid;
 using Rock.Lava.Fluid;
+using Rock.Tests.Shared.Lava;
 
 namespace Rock.Tests.Integration.Core.Lava
 {

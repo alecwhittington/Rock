@@ -22,6 +22,8 @@ using Rock.Lava;
 using Rock.Model;
 using Rock.Tests.Integration.Events;
 using Rock.Tests.Shared;
+using Rock.Tests.Shared.Lava;
+
 using static Rock.Tests.Integration.Events.EventsDataManager;
 
 namespace Rock.Tests.Integration.Core.Lava

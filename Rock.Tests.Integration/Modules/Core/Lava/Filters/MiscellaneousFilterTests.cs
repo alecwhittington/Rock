@@ -27,6 +27,7 @@ using Rock.Utility.Settings;
 using Rock.Web.Cache;
 using System.Collections.Generic;
 using Rock.Lava.RockLiquid;
+using Rock.Tests.Shared.Lava;
 
 namespace Rock.Tests.Integration.Core.Lava
 {

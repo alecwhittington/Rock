@@ -24,6 +24,7 @@ using Rock.Bus;
 using Rock.Tests.Integration.Core.Lava;
 using Rock.Tests.Integration.Database;
 using Rock.Tests.Shared;
+using Rock.Tests.Shared.Lava;
 using Rock.Utility.Settings;
 using Rock.Web.Cache;
 

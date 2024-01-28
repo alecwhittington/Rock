@@ -27,6 +27,7 @@ using Rock.Data;
 using System.Linq;
 using Rock.Model;
 using Rock.Tests.Integration.Events;
+using Rock.Tests.Shared.Lava;
 
 namespace Rock.Tests.Integration.Core.Lava
 {

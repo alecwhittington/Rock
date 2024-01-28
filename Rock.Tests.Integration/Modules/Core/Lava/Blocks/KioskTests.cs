@@ -2,6 +2,8 @@
 using Rock.CheckIn;
 using Rock.Lava;
 using Rock.Tests.Integration.Core.Lava;
+using Rock.Tests.Shared.Lava;
+
 using System.Collections.Generic;
 
 namespace Rock.Tests.Integration.Core.Lava
