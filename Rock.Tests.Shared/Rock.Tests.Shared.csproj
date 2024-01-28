@@ -142,11 +142,15 @@
     <Compile Include="Constants\Constants.cs" />
     <Compile Include="Constants\TestGuids.cs" />
     <Compile Include="Rock\Core\Schedules\ScheduleTestHelper.cs" />
+    <Compile Include="TestFramework\DatabaseContainerImageBuilder.cs" />
+    <Compile Include="TestFramework\DatabaseTestsBase.cs" />
+    <Compile Include="TestFramework\IsolatedTestDatabaseAttribute.cs" />
     <Compile Include="TestFramework\NumericAssertExtensions.cs" />
     <Compile Include="TestFramework\DateTimeAssertExtensions.cs" />
     <Compile Include="TestFramework\AssertExtensions.cs" />
     <Compile Include="TestFramework\CollectionAssertExtensions.cs" />
     <Compile Include="TestFramework\FileAssertExtensions.cs" />
+    <Compile Include="TestFramework\TestDatabaseContainer.cs" />
     <Compile Include="TestFramework\TestHelper.cs" />
     <Compile Include="TestFramework\xUnitAssertExtensions.cs" />
     <Compile Include="Utility\DateTimeTestHelper.cs" />
