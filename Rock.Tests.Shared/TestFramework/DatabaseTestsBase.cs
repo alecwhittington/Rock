@@ -24,11 +24,38 @@ namespace Rock.Tests.Shared.TestFramework
         private static TestDatabaseContainer _container;
 
         /// <summary>
+        /// <c>true</c> if the container has been used by a test already.
+        /// </summary>
+        private static bool _containerIsDirty = false;
+
+        /// <summary>
         /// Set by the test framework to indicate which test is running.
         /// </summary>
         public TestContext TestContext { get; set; }
 
         #region Methods
+
+        private static async Task StartNewContainer()
+        {
+            if ( _container != null )
+            {
+                try
+                {
+                    await _container.DisposeAsync();
+                }
+                finally
+                {
+                    _container = null;
+                }
+            }
+
+            var container = new TestDatabaseContainer();
+
+            await container.StartAsync();
+
+            _container = container;
+            _containerIsDirty = false;
+        }
 
         /// <summary>
         /// Called before any test is executed in the entire class.
@@ -38,7 +65,7 @@ namespace Rock.Tests.Shared.TestFramework
         [ClassInitialize( InheritanceBehavior.BeforeEachDerivedClass )]
         public static Task ContainerClassInitialize( TestContext context )
         {
-            return Task.CompletedTask;
+            return StartNewContainer();
         }
 
         /// <summary>
@@ -78,25 +105,9 @@ namespace Rock.Tests.Shared.TestFramework
             _testWantsIsolatedDatabase = method.GetCustomAttribute<IsolatedTestDatabaseAttribute>() != null
                 || GetType().GetCustomAttribute<IsolatedTestDatabaseAttribute>() != null;
 
-            if ( _container == null || _testWantsIsolatedDatabase )
+            if ( _container == null || ( _testWantsIsolatedDatabase && _containerIsDirty ) )
             {
-                if ( _container != null )
-                {
-                    try
-                    {
-                        await _container.DisposeAsync();
-                    }
-                    finally
-                    {
-                        _container = null;
-                    }
-                }
-
-                var container = new TestDatabaseContainer();
-
-                await container.StartAsync();
-
-                _container = container;
+                await StartNewContainer();
             }
         }
 
@@ -107,6 +118,8 @@ namespace Rock.Tests.Shared.TestFramework
         [TestCleanup]
         public async Task ContainerTestCleanup()
         {
+            _containerIsDirty = true;
+
             // If the test indicated that it needed an isolated database
             // then shut it down so the next test gets a fresh one.
             if ( _testWantsIsolatedDatabase && _container != null )
