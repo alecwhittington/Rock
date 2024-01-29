@@ -27,6 +27,7 @@ using Rock.Tests.Shared;
 using Rock.Tests.Shared.Lava;
 using Rock.Utility.Settings;
 using Rock.Web.Cache;
+using Rock.WebStartup;
 
 namespace Rock.Tests.Integration
 {
@@ -105,6 +106,10 @@ namespace Rock.Tests.Integration
             LogHelper.Log( $"Initializing Rock Message Bus..." );
             await RockMessageBus.StartTestMemoryBusAsync();
             LogHelper.Log( $"Initializing Rock Message Bus: completed." );
+
+            LogHelper.Log( "Initializing Save Hooks..." );
+            RockApplicationStartupHelper.ConfigureEntitySaveHooks();
+            LogHelper.Log( "Initializing Save Hooks: completed." );
 
             LogHelper.Log( $"Initialize Test Environment: completed." );
         }

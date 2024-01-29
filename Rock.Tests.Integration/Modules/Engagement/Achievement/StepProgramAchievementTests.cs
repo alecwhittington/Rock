@@ -1,20 +1,23 @@
-﻿using System.Data.Entity;
+﻿using System;
+using System.Data.Entity;
 using System.Linq;
+
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+
 using Rock.Achievement;
 using Rock.Data;
 using Rock.Model;
-using Rock.Web.Cache;
 using Rock.Tests.Shared;
-using System;
+using Rock.Tests.Shared.TestFramework;
+using Rock.Web.Cache;
 
-namespace Rock.Tests.Integration.Engagement.Steps
+namespace Rock.Tests.Integration.Modules.Engagement.Steps
 {
     /// <summary>
     /// Tests for Step Program Achievements that use the database
     /// </summary>
     [TestClass]
-    public class StepProgramAchievementTests
+    public class StepProgramAchievementTests : DatabaseTestsBase
     {
         private const string ComponentEntityTypeName = "Rock.Achievement.Component.StepProgramAchievement";
 

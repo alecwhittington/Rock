@@ -318,7 +318,6 @@
     <Compile Include="Modules\Core\Model\UserLoginTests.cs" />
     <Compile Include="Modules\Reporting\DataFilter\Person\PersonalDevicesDataFilterTests.cs" />
     <Compile Include="Modules\Rest\ControllersTests\FollowingControllerTests.cs" />
-    <Compile Include="Modules\Rest\ControllersTests\InteractionsControllerTests.cs" />
     <Compile Include="Modules\Rest\ControllersTests\AuthControllerTests.cs" />
     <Compile Include="Modules\Rest\SecuredAttributeTests.cs" />
     <Compile Include="Modules\Core\Rock.Logging\RockLoggingHelpers.cs" />
@@ -347,7 +346,6 @@
     <Compile Include="Modules\Core\Model\DeviceTests.cs" />
     <Compile Include="TestFramework\IntegrationTestDatabaseInitializer.cs" />
     <Compile Include="TestFramework\DatabaseRequiredAttribute.cs" />
-    <Compile Include="TestFramework\TestDatabaseContainer.cs" />
     <Compile Include="TestFramework\TestExtensionMethods.cs" />
     <Compile Include="ThirdPartyIntegrations\NcoaApi\TrueNcoaApiTests.cs" />
     <Compile Include="Modules\Core\Rock.Logging\RockLogConfigurationTest.cs" />
