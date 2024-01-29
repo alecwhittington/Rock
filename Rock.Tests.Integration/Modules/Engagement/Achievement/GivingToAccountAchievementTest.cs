@@ -371,6 +371,7 @@ namespace Rock.Tests.Integration.Modules.Engagement.Achievements
         private static void CreateAchievementTypeData()
         {
             // Create the component so it sets up the attributes.
+            AchievementContainer.Instance.Refresh();
             _ = AchievementContainer.GetComponent( ComponentEntityTypeName );
 
             // Single Achievement Types

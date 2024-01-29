@@ -153,6 +153,10 @@ namespace Rock.Tests.Integration.Modules.Engagement.Achievements
         /// </summary>
         private static void CreateAchievementTypeData()
         {
+            // Create the component so it sets up the attributes.
+            AchievementContainer.Instance.Refresh();
+            _ = AchievementContainer.GetComponent( ComponentEntityTypeName );
+
             var achievementType = new AchievementType
             {
                 Name = "Test Achievement",
@@ -190,17 +194,6 @@ namespace Rock.Tests.Integration.Modules.Engagement.Achievements
             CreatePersonAliasData();
             CreateStreakTypeData();
             CreateAchievementTypeData();
-        }
-
-        /// <summary>
-        /// Runs after all tests in this class is executed.
-        /// </summary>
-        [ClassCleanup]
-        public static void ClassCleanup()
-        {
-            DeleteTestData();
-            _rockContext = null;
-            _streakTypeService = null;
         }
 
         [TestCleanup]

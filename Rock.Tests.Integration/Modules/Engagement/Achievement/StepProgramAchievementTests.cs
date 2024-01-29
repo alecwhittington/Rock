@@ -93,6 +93,10 @@ namespace Rock.Tests.Integration.Modules.Engagement.Steps
         /// </summary>
         private static void CreateAchievementTypeData()
         {
+            // Create the component so it sets up the attributes.
+            AchievementContainer.Instance.Refresh();
+            _ = AchievementContainer.GetComponent( ComponentEntityTypeName );
+
             var achievementType = new AchievementType
             {
                 Name = "Test Achievement",

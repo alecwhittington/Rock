@@ -156,55 +156,14 @@ namespace Rock.Tests.Integration.Modules.Engagement.Achievements
         }
 
         /// <summary>
-        /// Delete the streak type created by this test class
-        /// </summary>
-        private static void DeleteTestData()
-        {
-            TestDataHelper.DeletePersonByGuid( new List<Guid> { TerryTestPersonGuid.AsGuid() } );
-
-            var rockContext = new RockContext();
-
-            // Remove Streak Type.
-            var streakTypeGuid = new Guid( StreakTypeGuidString );
-            var _streakTypeService = new StreakTypeService( rockContext );
-
-            var streakType = _streakTypeService.Queryable().FirstOrDefault( st => st.Guid == streakTypeGuid );
-
-            if ( streakType != null )
-            {
-                _streakTypeService.Delete( streakType );
-            }
-
-            rockContext.SaveChanges();
-
-            // Remove Streaks.
-            var streakService = new StreakService( rockContext );
-
-            var testStreaks = streakService.Queryable().Where( x => x.ForeignKey == TestRecordForeignKey ).ToList();
-            streakService.DeleteRange( testStreaks );
-
-            rockContext.SaveChanges();
-
-            // Remove Achievement Attempts
-            var attemptsService = new AchievementAttemptService( rockContext );
-            var attemptsQuery = attemptsService.Queryable()
-                .Where( x => x.ForeignKey == TestRecordForeignKey );
-
-            attemptsService.DeleteRange( attemptsQuery );
-            rockContext.SaveChanges();
-
-            // Remove Aliases
-            var personAliasService = new PersonAliasService( rockContext );
-            var personAliases = personAliasService.Queryable().Where( pa => pa.ForeignKey == TestRecordForeignKey ).ToList();
-            personAliasService.DeleteRange( personAliases );
-            rockContext.SaveChanges();
-        }
-
-        /// <summary>
         /// Creates the achievement type data.
         /// </summary>
         private static void CreateAchievementTypeData()
         {
+            // Create the component so it sets up the attributes.
+            AchievementContainer.Instance.Refresh();
+            _ = AchievementContainer.GetComponent( ComponentEntityTypeName );
+
             var rockContext = new RockContext();
 
             var achievementType = new AchievementType
