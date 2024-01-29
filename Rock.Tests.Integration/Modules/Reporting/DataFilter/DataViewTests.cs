@@ -26,7 +26,7 @@ using Rock.Model;
 using Rock.Tests.Shared;
 using Rock.Tests.Shared.TestFramework;
 
-namespace Rock.Tests.Integration.Modules.Reporting
+namespace Rock.Tests.Integration.Modules.Reporting.DataFilter
 {
     [TestClass]
     public class DataViewTests : DatabaseTestsBase

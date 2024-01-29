@@ -27,7 +27,7 @@ using Rock.Reporting;
 using Rock.Tests.Shared;
 using Rock.Tests.Shared.TestFramework;
 
-namespace Rock.Tests.Integration.Modules.Reporting
+namespace Rock.Tests.Integration.Modules.Reporting.ReportBuilder
 {
     /// <summary>
     /// Create and manage test data for the Rock CRM module.
