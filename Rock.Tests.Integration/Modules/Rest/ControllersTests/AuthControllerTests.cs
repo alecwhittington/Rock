@@ -27,7 +27,7 @@ namespace Rock.Tests.Integration.Modules.Rest.ControllersTests
                     RequestContext = new HttpRequestContext()
                 };
 
-                controller.Login( new Security.LoginParameters
+                controller.Login( new Rock.Security.LoginParameters
                 {
                     Username = "7777",
                     Password = "7777"

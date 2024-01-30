@@ -220,7 +220,7 @@
     <Compile Include="Modules\Core\MergeTemplateTests.cs" />
     <Compile Include="Modules\Core\Jobs\ProcessBiAnalyticsJobTests.cs" />
     <Compile Include="Modules\Core\Lava\Commands\CacheTests.cs" />
-    <Compile Include="Modules\Core\Rock.Security\RockSigningCredentialsTests.cs" />
+    <Compile Include="Modules\Security\RockSigningCredentialsTests.cs" />
     <Compile Include="Modules\Crm\Following\FollowingTests.cs" />
     <Compile Include="Modules\Crm\Groups\GroupRequirementsTests.cs" />
     <Compile Include="Modules\Crm\PersonBulkUpdateProcessorTests.cs" />
@@ -321,7 +321,7 @@
     <Compile Include="Modules\Rest\ControllersTests\AuthControllerTests.cs" />
     <Compile Include="Modules\Rest\SecuredAttributeTests.cs" />
     <Compile Include="Modules\Core\Rock.Logging\RockLoggingHelpers.cs" />
-    <Compile Include="Modules\Core\Rock.Security\OidcClientTests.cs" />
+    <Compile Include="Modules\Security\OidcClientTests.cs" />
     <Compile Include="Modules\Core\StorageTests\AmazonS3ComponentTests.cs" />
     <Compile Include="Modules\Core\StorageTests\AzureCloudComponentTests.cs" />
     <Compile Include="Modules\Core\StorageTests\BaseStorageComponentTests.cs" />
