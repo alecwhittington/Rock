@@ -203,6 +203,8 @@ namespace RockWeb.Blocks.Administration
                         phContext.Controls.Add( tbContext );
                     }
                 }
+
+                dvpPageIntent.DefinedTypeId = DefinedTypeCache.Get( new Guid( Rock.SystemGuid.DefinedType.INTERACTION_INTENT ) ).Id;
             }
             else
             {
@@ -580,6 +582,12 @@ namespace RockWeb.Blocks.Administration
             ceHeaderContent.Text = page.HeaderContent;
             tbPageRoute.Text = string.Join( ",", page.PageRoutes.Select( route => route.Route ).ToArray() );
 
+            var intentSettings = page.GetAdditionalSettings<PageService.IntentSettings>();
+            if ( intentSettings.InteractionIntentValueIds?.Any() == true )
+            {
+                dvpPageIntent.SetValues( intentSettings.InteractionIntentValueIds );
+            }
+
             // Add enctype attribute to page's <form> tag to allow file upload control to function
             Page.Form.Attributes.Add( "enctype", "multipart/form-data" );
         }
@@ -807,6 +815,14 @@ namespace RockWeb.Blocks.Administration
                     }
                 }
             }
+
+            // Intent Settings
+            var intentSettings = page.GetAdditionalSettings<PageService.IntentSettings>();
+
+            var selectedIntentValueIds = dvpPageIntent.SelectedValuesAsInt;
+            intentSettings.InteractionIntentValueIds = selectedIntentValueIds;
+
+            page.SetAdditionalSettings( intentSettings );
 
             // Page Attributes
             page.LoadAttributes();

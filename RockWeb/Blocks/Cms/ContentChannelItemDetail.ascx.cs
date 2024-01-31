@@ -245,6 +245,8 @@ namespace RockWeb.Blocks.Cms
             lbSave.OnClientClick = clearScript;
             lbCancel.OnClientClick = clearScript;
 
+            dvpContentChannelItemIntent.DefinedTypeId = DefinedTypeCache.Get( new Guid( Rock.SystemGuid.DefinedType.INTERACTION_INTENT ) ).Id;
+
             string script = string.Format( _jsScript, pnlStatus.ClientID, hfStatus.ClientID, hfIsDirty.ClientID, htmlContent.ClientID );
             ScriptManager.RegisterStartupScript( pnlStatus, pnlStatus.GetType(), "status-script-" + this.BlockId.ToString(), script, true );
         }
@@ -412,6 +414,14 @@ namespace RockWeb.Blocks.Cms
                     contentItem.ExperienceLevel = rblExperienceLevel.SelectedValueAsEnumOrNull<ContentLibraryItemExperienceLevel>();
                     contentItem.ContentLibraryContentTopicId = ddlTopic.SelectedValueAsInt();
                 }
+
+                // Intent Settings
+                var intentSettings = contentItem.GetAdditionalSettings<ContentChannelItemService.IntentSettings>();
+
+                var selectedIntentValueIds = dvpContentChannelItemIntent.SelectedValuesAsInt;
+                intentSettings.InteractionIntentValueIds = selectedIntentValueIds;
+
+                contentItem.SetAdditionalSettings( intentSettings );
 
                 contentItem.LoadAttributes( rockContext );
                 Rock.Attribute.Helper.GetEditValues( phAttributes, contentItem );
@@ -1260,6 +1270,12 @@ namespace RockWeb.Blocks.Cms
 
                         ddlTopic.SelectedValue = contentItem.ContentLibraryContentTopicId.ToString();
                     }
+                }
+
+                var intentSettings = contentItem.GetAdditionalSettings<ContentChannelItemService.IntentSettings>();
+                if ( intentSettings.InteractionIntentValueIds?.Any() == true )
+                {
+                    dvpContentChannelItemIntent.SetValues( intentSettings.InteractionIntentValueIds );
                 }
             }
             else

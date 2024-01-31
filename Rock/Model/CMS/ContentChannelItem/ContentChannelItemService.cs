@@ -552,5 +552,20 @@ namespace Rock.Model
         }
 
         #endregion
+
+        #region IHasAdditionalSettings Models
+
+        /// <summary>
+        /// Content channel item intent settings.
+        /// </summary>
+        public class IntentSettings
+        {
+            /// <summary>
+            /// Interaction intent defined value identifiers.
+            /// </summary>
+            public List<int> InteractionIntentValueIds { get; set; }
+        }
+
+        #endregion IHasAdditionalSettings Models
     }
 }

@@ -22,6 +22,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Data.Entity.ModelConfiguration;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
+
+using Rock.Attribute;
 using Rock.Data;
 using Rock.Lava;
 using Rock.Security;
@@ -392,6 +394,7 @@ namespace Rock.Model
         public string AdditionalSettings { get; set; }
 
         /// <inheritdoc/>
+        [RockInternal( "1.16.3" )]
         [DataMember]
         public string AdditionalSettingsJson { get; set; }
 
