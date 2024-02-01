@@ -14,15 +14,11 @@
 // limitations under the License.
 // </copyright>
 //
-using System;
-using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Rock.Data;
-using Rock.Jobs;
+
 using Rock.Lava;
 using Rock.Lava.Fluid;
-using Rock.Model;
-using Rock.Tests.Integration.Core.Lava;
+using Rock.Tests.Integration.Modules.Core.Lava;
 using Rock.Tests.Shared;
 using Rock.Tests.Shared.Lava;
 

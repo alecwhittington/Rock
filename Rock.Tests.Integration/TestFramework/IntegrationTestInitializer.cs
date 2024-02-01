@@ -15,13 +15,12 @@
 // </copyright>
 //
 using System.Configuration;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+
 using Rock.Bus;
-using Rock.Tests.Integration.Core.Lava;
 using Rock.Tests.Integration.Database;
 using Rock.Tests.Shared;
 using Rock.Tests.Shared.Lava;

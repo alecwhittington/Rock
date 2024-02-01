@@ -20,7 +20,7 @@ using Rock.Tests.Shared;
 using Rock.Tests.Shared.Lava;
 using Rock.Tests.Shared.TestFramework;
 
-namespace Rock.Tests.Integration.Core.Lava
+namespace Rock.Tests.Integration.Modules.Core.Lava
 {
     public abstract class LavaIntegrationTestBase : DatabaseTestsBase
     {

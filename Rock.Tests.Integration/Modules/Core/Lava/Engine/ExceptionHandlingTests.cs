@@ -19,7 +19,6 @@ using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using Rock.Lava;
-using Rock.Tests.Integration.Core.Lava;
 
 namespace Rock.Tests.Integration.Modules.Core.Lava.Engine
 {

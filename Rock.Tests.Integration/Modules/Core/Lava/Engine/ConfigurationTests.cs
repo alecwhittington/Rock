@@ -26,7 +26,6 @@ using Rock.Lava;
 using Rock.Lava.DotLiquid;
 using Rock.Lava.RockLiquid;
 using Rock.Model;
-using Rock.Tests.Integration.Core.Lava;
 using Rock.Tests.Shared;
 
 namespace Rock.Tests.Integration.Modules.Core.Lava.Engine

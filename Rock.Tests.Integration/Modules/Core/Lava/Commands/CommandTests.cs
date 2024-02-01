@@ -26,7 +26,6 @@ using Rock.Lava;
 using Rock.Lava.Fluid;
 using Rock.Lava.RockLiquid;
 using Rock.Model;
-using Rock.Tests.Integration.Core.Lava;
 using Rock.Tests.Shared.Lava;
 
 namespace Rock.Tests.Integration.Modules.Core.Lava.Commands

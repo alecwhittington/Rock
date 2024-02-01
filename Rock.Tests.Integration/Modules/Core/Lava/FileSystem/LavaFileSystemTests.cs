@@ -19,7 +19,6 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Rock.Lava;
 using Rock.Lava.DotLiquid;
 using Rock.Lava.Fluid;
-using Rock.Tests.Integration.Core.Lava;
 using Rock.Tests.Shared;
 using Rock.Tests.Shared.Lava;
 

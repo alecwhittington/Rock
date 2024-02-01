@@ -20,7 +20,6 @@ using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using Rock.Lava;
-using Rock.Tests.Integration.Core.Lava;
 using Rock.Tests.Shared.Lava;
 using Rock.Web.Cache;
 

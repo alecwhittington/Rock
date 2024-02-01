@@ -4,7 +4,6 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using Rock.CheckIn;
 using Rock.Lava;
-using Rock.Tests.Integration.Core.Lava;
 using Rock.Tests.Shared.Lava;
 
 namespace Rock.Tests.Integration.Modules.Core.Lava.Blocks

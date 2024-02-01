@@ -24,7 +24,6 @@ using Rock.Data;
 using Rock.Lava;
 using Rock.Lava.Blocks;
 using Rock.Model;
-using Rock.Tests.Integration.Core.Lava;
 using Rock.Tests.Integration.Events;
 using Rock.Tests.Shared;
 using Rock.Tests.Shared.Lava;
