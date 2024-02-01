@@ -16,14 +16,17 @@
 //
 using System;
 using System.Collections.Generic;
+
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+
 using Rock.Lava;
 using Rock.Lava.Fluid;
 using Rock.Lava.RockLiquid;
+using Rock.Tests.Integration.Core.Lava;
 using Rock.Tests.Shared;
 using Rock.Tests.Shared.Lava;
 
-namespace Rock.Tests.Integration.Core.Lava
+namespace Rock.Tests.Integration.Modules.Core.Lava.Commands
 {
     /// <summary>
     /// Test for shortcodes that are defined and implemented as code components rather than as parameterized Lava templates.

@@ -347,7 +347,6 @@
     <Compile Include="TestFramework\IntegrationTestDatabaseInitializer.cs" />
     <Compile Include="TestFramework\DatabaseRequiredAttribute.cs" />
     <Compile Include="TestFramework\TestExtensionMethods.cs" />
-    <Compile Include="ThirdPartyIntegrations\NcoaApi\TrueNcoaApiTests.cs" />
     <Compile Include="Modules\Core\Rock.Logging\RockLogConfigurationTest.cs" />
     <Compile Include="Modules\Core\Rock.Logging\RockLoggerTests.cs" />
     <Compile Include="Modules\Core\Rock.Logging\RockSerilogReaderTests.cs" />

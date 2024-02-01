@@ -47,7 +47,8 @@ namespace Rock.Tests.Shared.TestFramework
 
             var csb = new SqlConnectionStringBuilder( container.GetConnectionString() )
             {
-                InitialCatalog = "Rock"
+                InitialCatalog = "Rock",
+                MultipleActiveResultSets = true
             };
 
             // Configure Rock to use the new database.

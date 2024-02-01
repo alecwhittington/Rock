@@ -77,7 +77,8 @@ namespace Rock.Tests.Shared.TestFramework
 
                 var csb = new SqlConnectionStringBuilder( connectionString )
                 {
-                    InitialCatalog = "Rock"
+                    InitialCatalog = "Rock",
+                    MultipleActiveResultSets = true
                 };
 
                 RockInstanceConfig.Database.SetConnectionString( csb.ConnectionString );

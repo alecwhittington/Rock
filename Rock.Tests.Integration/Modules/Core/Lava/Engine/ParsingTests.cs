@@ -15,12 +15,14 @@
 // </copyright>
 //
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+
 using Rock.Lava;
 using Rock.Lava.Fluid;
+using Rock.Tests.Integration.Core.Lava;
 using Rock.Tests.Shared;
 using Rock.Tests.Shared.Lava;
 
-namespace Rock.Tests.Integration.Core.Lava
+namespace Rock.Tests.Integration.Modules.Core.Lava.Engine
 {
     /// <summary>
     /// Test the compatibility of the Lava parser with the Liquid language syntax.

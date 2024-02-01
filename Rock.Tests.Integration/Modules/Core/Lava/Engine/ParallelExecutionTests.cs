@@ -14,15 +14,18 @@
 // limitations under the License.
 // </copyright>
 //
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Rock.Lava;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using System.Threading;
+using System.Threading.Tasks;
+
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+using Rock.Lava;
 using Rock.Lava.RockLiquid;
+using Rock.Tests.Integration.Core.Lava;
 using Rock.Tests.Shared.Lava;
 
-namespace Rock.Tests.Integration.Core.Lava
+namespace Rock.Tests.Integration.Modules.Core.Lava.Engine
 {
     /// <summary>
     /// Tests for parallel execution and multi-threading issues.
