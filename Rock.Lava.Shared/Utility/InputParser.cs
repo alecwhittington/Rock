@@ -15,6 +15,7 @@
 // </copyright>
 //
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
 
@@ -161,5 +162,112 @@ namespace Rock.Lava
 
             throw new Exception( $"Invalid Value. The input does not represent a valid Guid. [Name={inputFieldName}, Value={input}]" );
         }
+
+        #region Guids
+
+        /// <summary>
+        /// Try to convert an input object to a Guid value, or return a default value if unsuccessful.
+        /// </summary>
+        /// <param name="input"></param>
+        /// <param name="valueIfEmpty"></param>
+        /// <param name="valueIfInvalid"></param>
+        /// <returns></returns>
+        public static Guid? ConvertToGuidOrDefault( this object input, Guid? valueIfEmpty = null, Guid? valueIfInvalid = null )
+        {
+            // If the input is null or whitespace, return the empty value.
+            if ( input is string inputString )
+            {
+                if ( string.IsNullOrWhiteSpace( inputString ) )
+                {
+                    return valueIfEmpty;
+                }
+            }
+            else if ( input == null )
+            {
+                return valueIfEmpty;
+            }
+
+            Guid value;
+            if ( Guid.TryParse( input.ToString(), out value ) )
+            {
+                // Return the parsed Guid value.
+                return value;
+            }
+
+            // Parsing failed, so return the invalid value.
+            return valueIfInvalid;
+        }
+
+        /// <summary>
+        /// Try to convert an input object to a Guid value, or throw an exception if unsuccessful.
+        /// </summary>
+        /// <param name="input"></param>
+        /// <param name="valueIfEmpty"></param>
+        /// <returns></returns>
+        public static Guid ConvertToGuidOrThrow( this object input, bool returnDefaultIfNullOrEmpty = true )
+        {
+            var value = ConvertToGuidOrDefault( input, returnDefaultIfNullOrEmpty ? Guid.Empty : ( Guid? ) null, null );
+            if ( value == null )
+            {
+                throw new Exception( $"Invalid Guid value. [Value={input}]" );
+            }
+
+            return value.Value;
+        }
+
+        /// <summary>
+        /// Try to convert an input object to a list of Guids, or return a default value if unsuccessful.
+        /// </summary>
+        /// <param name="input"></param>
+        /// <param name="output"></param>
+        /// <param name="delimiter"></param>
+        /// <returns></returns>
+        public static bool TryConvertToGuidList( string input, out List<Guid> output, string delimiter )
+        {
+            // If the input is null or whitespace, return the empty value.
+            if ( input == null )
+            {
+                output = new List<Guid>();
+                return true;
+            }
+
+            var inputList = input.Split( new string[] { delimiter }, StringSplitOptions.RemoveEmptyEntries ).ToList();
+
+            var isValid = TryConvertToGuidList( inputList, out output );
+            return isValid;
+        }
+
+        /// <summary>
+        /// Try to convert an input object to a list of Guids, or return a default value if unsuccessful.
+        /// </summary>
+        /// <param name="input"></param>
+        /// <param name="output"></param>
+        /// <param name="delimiter"></param>
+        /// <returns></returns>
+        public static bool TryConvertToGuidList( IEnumerable<object> input, out List<Guid> output )
+        {
+            output = new List<Guid>();
+
+            // If the input is null or whitespace, return the empty value.
+            if ( input == null )
+            {
+                return true;
+            }
+
+            foreach ( var value in input )
+            {
+                var GuidValue = ConvertToGuidOrDefault( value, Guid.Empty, null );
+                if ( GuidValue == null )
+                {
+                    return false;
+                }
+
+                output.Add( GuidValue.Value );
+            }
+
+            return true;
+        }
+
+        #endregion
     }
 }
