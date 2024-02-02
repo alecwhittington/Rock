@@ -15,18 +15,19 @@
 // </copyright>
 using System;
 using System.Collections.Generic;
-using System.Threading;
+
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+
 using Rock.Logging;
 using Rock.Tests.Shared;
+using Rock.Tests.Shared.TestFramework;
 
-namespace Rock.Tests.Integration.Core.Logging
+namespace Rock.Tests.Integration.Modules.Core.Logging
 {
     [TestClass]
-    public class RockLoggerTests
+    public class RockLoggerTests : DatabaseTestsBase
     {
         [TestMethod]
-        [Ignore("Fix required. File is locked by other tests when run in a set.")]
         public void ConfirmRockLoggerLogsCorrectly()
         {
             var originalLogLevel = RockLogLevel.All;

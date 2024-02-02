@@ -320,7 +320,7 @@
     <Compile Include="Modules\Rest\ControllersTests\FollowingControllerTests.cs" />
     <Compile Include="Modules\Rest\ControllersTests\AuthControllerTests.cs" />
     <Compile Include="Modules\Rest\SecuredAttributeTests.cs" />
-    <Compile Include="Modules\Core\Rock.Logging\RockLoggingHelpers.cs" />
+    <Compile Include="Modules\Core\Logging\RockLoggingHelpers.cs" />
     <Compile Include="Modules\Security\OidcClientTests.cs" />
     <Compile Include="Modules\Core\StorageTests\AmazonS3ComponentTests.cs" />
     <Compile Include="Modules\Core\StorageTests\AzureCloudComponentTests.cs" />
@@ -347,10 +347,10 @@
     <Compile Include="TestFramework\IntegrationTestDatabaseInitializer.cs" />
     <Compile Include="TestFramework\DatabaseRequiredAttribute.cs" />
     <Compile Include="TestFramework\TestExtensionMethods.cs" />
-    <Compile Include="Modules\Core\Rock.Logging\RockLogConfigurationTest.cs" />
-    <Compile Include="Modules\Core\Rock.Logging\RockLoggerTests.cs" />
-    <Compile Include="Modules\Core\Rock.Logging\RockSerilogReaderTests.cs" />
-    <Compile Include="Modules\Core\Rock.Logging\RockLoggerSerilogTests.cs" />
+    <Compile Include="Modules\Core\Logging\RockLogConfigurationTest.cs" />
+    <Compile Include="Modules\Core\Logging\RockLoggerTests.cs" />
+    <Compile Include="Modules\Core\Logging\RockSerilogReaderTests.cs" />
+    <Compile Include="Modules\Core\Logging\RockLoggerSerilogTests.cs" />
     <Compile Include="Modules\Rest\ControllersTests\AttendanceControllerTests.cs" />
     <Compile Include="Modules\Crm\Attendances\AttendanceBulkImportTest.cs" />
     <Compile Include="Modules\Communications\SmsTests.cs" />
