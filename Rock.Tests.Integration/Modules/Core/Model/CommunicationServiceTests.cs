@@ -20,16 +20,19 @@ using System.Data;
 using System.Data.Entity;
 using System.Diagnostics;
 using System.Linq;
+
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+
 using Rock.Data;
 using Rock.Model;
 using Rock.Tests.Shared;
+using Rock.Tests.Shared.TestFramework;
 using Rock.Web.Cache;
 
-namespace Rock.Tests.Integration.Communications
+namespace Rock.Tests.Integration.Modules.Core.Model
 {
     [TestClass]
-    public class CommunicationServiceTests
+    public class CommunicationServiceTests : DatabaseTestsBase
     {
         private const int _expirationDays = 3;
         private const int _delayMinutes = 5;
@@ -39,9 +42,6 @@ namespace Rock.Tests.Integration.Communications
         [ClassInitialize]
         public static void TestInitialize( TestContext context )
         {
-            IntegrationTestInitializer.InitializeDatabase();
-            TestDatabaseHelper.ResetDatabase();
-
             CreateCommunicationsTestData( _expirationDays, _delayMinutes );
         }
 

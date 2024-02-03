@@ -35,7 +35,6 @@ namespace Rock.Tests.Integration.Modules.Core.Model
         [DataRow( ElevatedSecurityLevel.None, AccountProtectionProfile.Low )]
         [DataRow( ElevatedSecurityLevel.High, AccountProtectionProfile.High )]
         [DataRow( ElevatedSecurityLevel.Extreme, AccountProtectionProfile.Extreme )]
-        //[Ignore("Fix needed. This test returns an unexpected result. [MP]")]
         public void PostSave_ShouldUpdatePersonAccountProtectionProfileToCorrectValue( int expectedElevatedSecurityLevel, int expectedAccountProtectionProfile )
         {
             var personGuid = Guid.NewGuid();
