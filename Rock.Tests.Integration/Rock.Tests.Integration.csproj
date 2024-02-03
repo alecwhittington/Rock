@@ -371,7 +371,6 @@
     <Compile Include="TestData\TestDataHelper.cs" />
     <Compile Include="Modules\Core\UniversalSearch\IndexModels\GroupIndexTests.cs" />
     <Compile Include="TestFramework\PersonLookup.cs" />
-    <Compile Include="Modules\Core\Utility\Settings\RockInstanceConfigurationTests.cs" />
     <Compile Include="TestFramework\TestDatabaseHelper.cs" />
     <Compile Include="Modules\Web\Cache\RateLimiterCacheTests.cs" />
     <Compile Include="Modules\Web\Utilities\RockUpdateHelperTests.cs" />
@@ -467,7 +466,6 @@
   <ItemGroup>
     <Folder Include="Constants\" />
     <Folder Include="Jobs\" />
-    <Folder Include="Modules\Crm\Steps\" />
   </ItemGroup>
   <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
