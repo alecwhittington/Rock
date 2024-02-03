@@ -91,7 +91,7 @@ namespace Rock.Tests.Integration.Modules.Core.Model
             }
         }
 
-        private global::Rock.Model.Interaction BuildInteraction( RockContext rockContext, DateTime interactionDate )
+        private Interaction BuildInteraction( RockContext rockContext, DateTime interactionDate )
         {
             var args = new TestDataHelper.Interactions.CreatePageViewInteractionActionArgs
             {
