@@ -236,7 +236,6 @@
     <Compile Include="Modules\Communications\Transport\MailgunTests.cs" />
     <Compile Include="Modules\Communications\Transport\MockSmtpTransport.cs" />
     <Compile Include="Modules\Communications\Transport\SMTPTests.cs" />
-    <Compile Include="Modules\Communications\Transport\TwilioTests.cs" />
     <Compile Include="Modules\Engagement\Connections\ConnectionOpportunityTests.cs" />
     <Compile Include="Modules\Core\AttributeTests.cs" />
     <Compile Include="Modules\Core\FieldTypesListing.cs" />
@@ -378,9 +377,16 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+    <None Include="app.ConnectionStrings.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="app.TestSettings.config.example" />
-    <None Include="packages.config" />
+    <None Include="app.TestSettings.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="app.ConnectionStrings.config.example" />
+    <None Include="packages.config" />
+    <None Include="README.md" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DotLiquid\DotLiquid.csproj">
@@ -463,16 +469,13 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Constants\" />
-    <Folder Include="Jobs\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <PropertyGroup>
-    <PostBuildEvent>IF EXIST "$(ProjectDir)app.ConnectionStrings.config" xcopy "$(ProjectDir)app.ConnectionStrings.config" "$(TargetDir)" /y
-IF EXIST "$(ProjectDir)app.TestSettings.config" xcopy "$(ProjectDir)app.TestSettings.config" "$(TargetDir)" /y</PostBuildEvent>
-  </PropertyGroup>
+  <Target Name="CreateDefaultConfigFiles" BeforeTargets="PrepareForBuild">
+    <Copy Condition="!Exists('$(ProjectDir)app.ConnectionStrings.config')" SourceFiles="$(ProjectDir)app.ConnectionStrings.config.example" DestinationFiles="$(ProjectDir)app.ConnectionStrings.config" />
+    <Copy Condition="!Exists('$(ProjectDir)app.TestSettings.config')" SourceFiles="$(ProjectDir)app.TestSettings.config.example" DestinationFiles="$(ProjectDir)app.TestSettings.config" />
+  </Target>
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>

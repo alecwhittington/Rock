@@ -28,9 +28,6 @@ namespace Rock.Tests.Integration.Modules.Core.Logging
     [TestClass]
     public class RockLoggerSerilogTests : DatabaseTestsBase
     {
-        private TestContext testContextInstance;
-
-        private const string TEST_LOGGER_CONFIG_SERIALIZATION = "{\"LogLevel\":\"All\",\"MaxFileSize\":1,\"NumberOfLogFiles\":1,\"DomainsToLog\":[\"OTHER\",\"crm\"],\"LogPath\":\"logs\\\\rock.log\",\"LastUpdated\":\"2020-04-01T11:11:11.0000000\",\"$type\":\"RockLogConfiguration\"}";
         private const string TEST_EXCEPTION_SERIALIZATION = "System.Exception: Test Exception";
 
         private readonly Exception TestException = new Exception( "Test Exception" );

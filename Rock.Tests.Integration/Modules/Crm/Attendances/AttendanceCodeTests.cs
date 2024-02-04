@@ -224,7 +224,7 @@ namespace Rock.Tests.Integration.Modules.Crm.Attendance
         /// because there's really nothing else we could do in that situation, right.
         /// </summary>
         [TestMethod]
-        public async Task RequestingMoreCodesThanPossibleShouldThrowException()
+        public void RequestingMoreCodesThanPossibleShouldThrowException()
         {
             var codeList = new List<string>();
             AttendanceCode code = null;

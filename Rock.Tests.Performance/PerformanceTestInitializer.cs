@@ -14,8 +14,10 @@
 // limitations under the License.
 // </copyright>
 //
-using System.Configuration;
+using System.Threading.Tasks;
+
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+
 using Rock.Tests.Integration;
 
 namespace Rock.Tests.Performance
@@ -28,24 +30,11 @@ namespace Rock.Tests.Performance
         /// </summary>
         /// <param name="context">The context.</param>
         [AssemblyInitialize]
-        public static void AssemblyInitialize( TestContext context )
+        public static async Task AssemblyInitialize( TestContext context )
         {
-            // Copy the configuration settings to the TestContext so they can be accessed by the integration tests project initializer.
-            AddTestContextSettingsFromConfigurationFile( context );
+            //IsContainersEnabled = ConfigurationManager.ConnectionStrings["RockContext"] == null;
 
-            IntegrationTestInitializer.Initialize( context );
+            await IntegrationTestInitializer.InitializeTestEnvironment( context );
         }
-
-        public static void AddTestContextSettingsFromConfigurationFile( TestContext context )
-        {
-            // This project is not a Test Project type, so it does not load configuration from a .runsettings file.
-            // Copy the configuration settings to the TestContext so they can be accessed by the integration tests project initializer.
-            foreach ( var key in ConfigurationManager.AppSettings.AllKeys )
-            {
-                context.Properties[key] = ConfigurationManager.AppSettings[key];
-            }
-
-        }
-
     }
 }
