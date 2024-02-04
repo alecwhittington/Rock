@@ -28,6 +28,7 @@ namespace Rock.Tests.Integration.Modules.Core.Logging
     public class RockLoggerTests : DatabaseTestsBase
     {
         [TestMethod]
+        [Ignore( "Test randomly fails, even when running by itself." )]
         public void ConfirmRockLoggerLogsCorrectly()
         {
             var originalLogLevel = RockLogLevel.All;

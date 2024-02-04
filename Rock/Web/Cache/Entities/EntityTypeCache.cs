@@ -680,13 +680,6 @@ namespace Rock.Web.Cache
                 return Get( entityTypeId );
             }
 
-            // In rare situations, including unit tests, we can get called
-            // before the database is ready.
-            if ( !RockInstanceConfig.DatabaseIsAvailable )
-            {
-                return null;
-            }
-
             if ( rockContext != null )
             {
                 var entityTypeModel = new EntityTypeService( rockContext ).GetByName( name, createNew );
