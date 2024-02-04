@@ -15,29 +15,31 @@
 // </copyright>
 //
 using System.Configuration;
-using System.Threading;
 using System.Threading.Tasks;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using Rock.Bus;
-using Rock.Tests.Integration.Database;
 using Rock.Tests.Shared;
-using Rock.Tests.Shared.Lava;
-using Rock.Utility.Settings;
-using Rock.Web.Cache;
 using Rock.WebStartup;
 
-namespace Rock.Tests.Integration
+namespace Rock.Tests.Integration.TestFramework
 {
     [TestClass]
+    [DeploymentItem( "app.TestSettings.config" )]
+    [DeploymentItem( "app.ConnectionStrings.config" )]
     public sealed class IntegrationTestInitializer
     {
         public static bool IsContainersEnabled { get; private set; }
 
-        public static bool InitializeDatabaseOnStartup = true;
-        public static ITestDatabaseInitializer DatabaseInitializer = new IntegrationTestDatabaseInitializer();
-        public static bool InitializeSampleDataOnStartup = true;
+        [TestMethod]
+        public void ForceDeployment()
+        {
+            // This method is required to workaround an issue with the MSTest deployment process.
+            // It exists to ensure that the DeploymentItem attributes decorating this class are processed,
+            // so that the required files are copied to the test deployment directory.
+            // For further details, see https://github.com/microsoft/testfx/issues/634.
+        }
 
         /// <summary>
         /// This will run before any tests in this assembly are run.
@@ -49,43 +51,6 @@ namespace Rock.Tests.Integration
             IsContainersEnabled = ConfigurationManager.ConnectionStrings["RockContext"] == null;
 
             await InitializeTestEnvironment( context );
-        }
-
-        /// <summary>
-        /// Initialize the Rock application environment for integration testing.
-        /// </summary>
-        /// <param name="context">The context.</param>
-        public static void Initialize( TestContext context )
-        {
-            Rock.AssemblyInitializer.Initialize();
-
-            // Copy the configuration settings to the TestContext so they can be accessed by the integration tests project initializer.
-            AddTestContextSettingsFromConfigurationFile( context );
-
-            LogHelper.SetTestContext( context );
-            LogHelper.Log( $"Initialize Test Environment: started..." );
-
-            // Initialize the Lava Engine first, because it may be needed by the sample data loader when the database is initialized.
-            LogHelper.Log( $"Initializing Lava Engine (Pass 1)..." );
-            LavaIntegrationTestHelper.Initialize( testRockLiquidEngine: true, testDotLiquidEngine: false, testFluidEngine: true, loadShortcodes: false );
-
-            // Set properties of the database manager from the test context.
-            TestDatabaseHelper.ConnectionString = ConfigurationManager.ConnectionStrings["RockContext"].ConnectionString;
-            TestDatabaseHelper.DatabaseCreatorKey = context.Properties["DatabaseCreatorKey"].ToStringSafe();
-            TestDatabaseHelper.DatabaseRefreshStrategy = context.Properties["DatabaseRefreshStrategy"].ToStringSafe().ConvertToEnum<DatabaseRefreshStrategySpecifier>( DatabaseRefreshStrategySpecifier.Never );
-            TestDatabaseHelper.SampleDataUrl = context.Properties["SampleDataUrl"].ToStringSafe();
-            TestDatabaseHelper.DefaultSnapshotName = context.Properties["DefaultSnapshotName"].ToStringSafe();
-            TestDatabaseHelper.DatabaseInitializer = DatabaseInitializer;
-            TestDatabaseHelper.SampleDataIsEnabled = InitializeSampleDataOnStartup;
-
-            if ( InitializeDatabaseOnStartup )
-            {
-                InitializeDatabase();
-            }
-            else
-            {
-                LogHelper.Log( $"Initializing test database... (disabled)" );
-            }
         }
 
         /// <summary>
@@ -111,58 +76,6 @@ namespace Rock.Tests.Integration
             LogHelper.Log( "Initializing Save Hooks: completed." );
 
             LogHelper.Log( $"Initialize Test Environment: completed." );
-        }
-
-        private static bool _databaseIsInitialized = false;
-        private static readonly object _databaseInitializationLock = new object();
-
-        /// <summary>
-        /// Initialize the Rock test database for integration testing.
-        /// </summary>
-        /// <param name="context">The context.</param>
-        public static void InitializeDatabase()
-        {
-            lock ( _databaseInitializationLock )
-            {
-                if ( _databaseIsInitialized )
-                {
-                    return;
-                }
-
-                _databaseIsInitialized = true;
-
-                LogHelper.Log( $"Initialize Test Database: started..." );
-
-                TestDatabaseHelper.InitializeTestDatabase();
-
-                RockInstanceConfig.SetDatabaseIsAvailable( true );
-
-                // Reinitialize the Lava Engine and configure it to load dynamic shortcodes from the test database.
-                LogHelper.Log( $"Initializing Lava Engine (Pass 2)..." );
-                LavaIntegrationTestHelper.Initialize( testRockLiquidEngine: true, testDotLiquidEngine: false, testFluidEngine: true, loadShortcodes: true );
-
-                LogHelper.Log( $"Initializing Rock Message Bus..." );
-
-                // Verify that the InMemory transport component is registered.
-                // If not, the Rock Message Bus will fail to start.
-                var cacheEntity = EntityTypeCache.Get( typeof( Rock.Bus.Transport.InMemory ), createIfNotFound: false );
-                if ( cacheEntity == null )
-                {
-                    throw new System.Exception( "Rock Message Bus failure. The InMemoryTransport Entity Type is not registered. To correct this error, re-create the test database with the \"ForceReplaceExistingDatabase\" configuration option." );
-                }
-
-                // Start the Message Bus and poll until it is ready.
-                _ = RockMessageBus.StartAsync();
-
-                while ( !RockMessageBus.IsReady() )
-                {
-                    LogHelper.Log( $"Waiting on Rock Message Bus..." );
-                    Thread.Sleep( 500 );
-                }
-                RockMessageBus.IsRockStarted = true;
-
-                LogHelper.Log( $"Initializing Test Database: completed." );
-            }
         }
 
         public static void AddTestContextSettingsFromConfigurationFile( TestContext context )

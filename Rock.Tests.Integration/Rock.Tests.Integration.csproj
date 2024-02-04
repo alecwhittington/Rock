@@ -331,7 +331,6 @@
     <Compile Include="TestData\Core\TestDataHelper.Web.cs" />
     <Compile Include="TestData\Core\SampleDataHelper.cs" />
     <Compile Include="TestData\Reporting\TestDataHelper.Reporting.cs" />
-    <Compile Include="TestFramework\DatabaseIntegrationTestClassBase.cs" />
     <Compile Include="Modules\Core\Model\AttendanceOccurrenceTests.cs" />
     <Compile Include="Modules\Core\Model\BenevolenceRequestTests.cs" />
     <Compile Include="Modules\Core\Model\CommunicationsTests.cs" />
@@ -343,9 +342,7 @@
     <Compile Include="Modules\Core\Model\RegistrationTests.cs" />
     <Compile Include="Modules\Core\Model\StepTests.cs" />
     <Compile Include="Modules\Core\Model\DeviceTests.cs" />
-    <Compile Include="TestFramework\IntegrationTestDatabaseInitializer.cs" />
-    <Compile Include="TestFramework\DatabaseRequiredAttribute.cs" />
-    <Compile Include="TestFramework\TestExtensionMethods.cs" />
+    <Compile Include="TestExtensionMethods.cs" />
     <Compile Include="Modules\Core\Logging\RockLogConfigurationTest.cs" />
     <Compile Include="Modules\Core\Logging\RockLoggerTests.cs" />
     <Compile Include="Modules\Core\Logging\RockSerilogReaderTests.cs" />
@@ -370,7 +367,6 @@
     <Compile Include="TestData\TestDataHelper.cs" />
     <Compile Include="Modules\Core\UniversalSearch\IndexModels\GroupIndexTests.cs" />
     <Compile Include="TestFramework\PersonLookup.cs" />
-    <Compile Include="TestFramework\TestDatabaseHelper.cs" />
     <Compile Include="Modules\Web\Cache\RateLimiterCacheTests.cs" />
     <Compile Include="Modules\Web\Utilities\RockUpdateHelperTests.cs" />
     <Compile Include="Modules\Core\Workflow\Action\BackgroundCheckRequestTests.cs" />
