@@ -21,6 +21,8 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using Rock.Bus;
 using Rock.Tests.Shared;
+using Rock.Tests.Shared.TestFramework;
+using Rock.Utility.Settings;
 using Rock.WebStartup;
 
 namespace Rock.Tests.Integration.TestFramework
@@ -48,8 +50,6 @@ namespace Rock.Tests.Integration.TestFramework
         [AssemblyInitialize]
         public static async Task AssemblyInitialize( TestContext context )
         {
-            IsContainersEnabled = ConfigurationManager.ConnectionStrings["RockContext"] == null;
-
             await InitializeTestEnvironment( context );
         }
 
@@ -62,6 +62,13 @@ namespace Rock.Tests.Integration.TestFramework
         /// <returns>A task that indicates when the operation has completed.</returns>
         public static async Task InitializeTestEnvironment( TestContext context )
         {
+            if ( ConfigurationManager.ConnectionStrings["RockContext"] != null )
+            {
+                DatabaseTestsBase.IsContainersEnabled = false;
+                RockInstanceConfig.Database.SetConnectionString( ConfigurationManager.ConnectionStrings["RockContext"].ConnectionString );
+                RockInstanceConfig.SetDatabaseIsAvailable( true );
+            }
+
             AddTestContextSettingsFromConfigurationFile( context );
 
             LogHelper.SetTestContext( context );

@@ -43,8 +43,6 @@ namespace Rock.Tests.Performance
         [AssemblyInitialize]
         public static async Task AssemblyInitialize( TestContext context )
         {
-            //IsContainersEnabled = ConfigurationManager.ConnectionStrings["RockContext"] == null;
-
             await IntegrationTestInitializer.InitializeTestEnvironment( context );
         }
     }

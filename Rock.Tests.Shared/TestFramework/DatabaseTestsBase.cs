@@ -13,6 +13,13 @@ namespace Rock.Tests.Shared.TestFramework
     public abstract class DatabaseTestsBase
     {
         /// <summary>
+        /// <c>true</c> if running the database in a docker container
+        /// is enabled; otherwise the RockContext connection string
+        /// defined in the app settings will be used instead.
+        /// </summary>
+        public static bool IsContainersEnabled { get; set; } = true;
+
+        /// <summary>
         /// <c>true</c> if we need to destroy the test container after the
         /// current test has finished.
         /// </summary>
@@ -35,8 +42,18 @@ namespace Rock.Tests.Shared.TestFramework
 
         #region Methods
 
+        /// <summary>
+        /// Starts a new container, after stopping the previous container,
+        /// for a fresh database.
+        /// </summary>
+        /// <returns>A task that indicates when the operation has completed.</returns>
         private static async Task StartNewContainer()
         {
+            if ( !IsContainersEnabled )
+            {
+                return;
+            }
+
             if ( _container != null )
             {
                 try
@@ -100,6 +117,11 @@ namespace Rock.Tests.Shared.TestFramework
         [TestInitialize]
         public async Task ContainerTestInitialize()
         {
+            if ( !IsContainersEnabled )
+            {
+                return;
+            }
+
             var method = GetType().GetMethod( TestContext.TestName );
 
             _testWantsIsolatedDatabase = method.GetCustomAttribute<IsolatedTestDatabaseAttribute>() != null
