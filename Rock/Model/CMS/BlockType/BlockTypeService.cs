@@ -36,6 +36,9 @@ namespace Rock.Model
     /// </summary>
     public partial class BlockTypeService
     {
+        /// <summary>
+        /// The Ids of <see cref="BlockType"/> entities to compile during Rock startup.
+        /// </summary>
         private static ConcurrentQueue<int> BlockTypeIdsToVerify = new ConcurrentQueue<int>();
 
         /// <summary>
