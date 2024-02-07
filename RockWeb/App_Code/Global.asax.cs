@@ -16,6 +16,7 @@
 using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Data.Entity;
 using System.Diagnostics;
 using System.Linq;
 using System.Net;
@@ -350,29 +351,37 @@ namespace RockWeb
         /// </summary>
         private static void StartBlockTypeCompilationThread()
         {
-            BlockTypeCompilationThread = new Thread( () =>
+            Stopwatch stopwatchCompileBlockTypes = Stopwatch.StartNew();
+
+            // get a list of all block types that are used by blocks
+            var allUsedBlockTypeIds = new BlockTypeService( new RockContext() ).Queryable()
+                .AsNoTracking()
+                .Where( a => a.Blocks.Any() )
+                .Select( a => a.Id )
+                .ToArray();
+
+            try
             {
-                // Set to background thread so that this thread doesn't prevent Rock from shutting down.
-                Thread.CurrentThread.IsBackground = true;
-
-                // Set priority to lowest so that RockPage.VerifyBlockTypeInstanceProperties() gets priority
-                Thread.CurrentThread.Priority = ThreadPriority.Lowest;
-
-                Stopwatch stopwatchCompileBlockTypes = Stopwatch.StartNew();
-
-                // get a list of all block types that are used by blocks
-                var allUsedBlockTypeIds = new BlockTypeService( new RockContext() ).Queryable()
-                    .Where( a => a.Blocks.Any() )
-                    .OrderBy( a => a.Category )
-                    .Select( a => a.Id ).ToArray();
-
                 // Pass in a CancellationToken so we can stop compiling if Rock shuts down before it is done
-                BlockTypeService.VerifyBlockTypeInstanceProperties( allUsedBlockTypeIds, _threadCancellationTokenSource.Token );
+                BlockTypeCompilationThread = new Thread( () =>
+                {
+                    // Set to background thread so that this thread doesn't prevent Rock from shutting down.
+                    Thread.CurrentThread.IsBackground = true;
 
-                Debug.WriteLine( string.Format( "[{0,5:#} seconds] Block Types Compiled", stopwatchCompileBlockTypes.Elapsed.TotalSeconds ) );
-            } );
+                    // Set priority to lowest so that RockPage.VerifyBlockTypeInstanceProperties() gets priority
+                    Thread.CurrentThread.Priority = ThreadPriority.Lowest;
 
-            BlockTypeCompilationThread.Start();
+                    BlockTypeService.VerifyBlockTypeInstancePropertiesConcurrently( allUsedBlockTypeIds, _threadCancellationTokenSource.Token );
+
+                    System.Diagnostics.Debug.WriteLine( string.Format( "[{0,5:#} seconds] {1} Block Types Compiled", stopwatchCompileBlockTypes.Elapsed.TotalSeconds, allUsedBlockTypeIds.Length ) );
+                } );
+
+                BlockTypeCompilationThread.Start();
+
+            } catch (Exception ex )
+            {
+                System.Diagnostics.Debug.WriteLine( string.Format( "##Block Type Compilation Exception##: {0}\n{1}", ex.Message, ex.StackTrace ) );
+            }
         }
 
         /// <summary>

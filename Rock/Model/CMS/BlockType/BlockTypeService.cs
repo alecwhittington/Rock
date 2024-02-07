@@ -15,6 +15,7 @@
 // </copyright>
 //
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Diagnostics;
@@ -35,6 +36,8 @@ namespace Rock.Model
     /// </summary>
     public partial class BlockTypeService
     {
+        private static ConcurrentQueue<int> BlockTypeIdsToVerify = new ConcurrentQueue<int>();
+
         /// <summary>
         /// Gets a <see cref="Rock.Model.BlockType"/> by its Guid.
         /// </summary>
@@ -129,6 +132,47 @@ namespace Rock.Model
                 {
                     // ignore if the block couldn't be compiled, it'll get logged and shown when the page tries to load the block into the page
                     Debug.WriteLine( ex );
+                }
+            }
+        }
+
+        /// <summary>
+        /// Verifies the block type instance properties to make sure they are compiled and have the attributes updated,
+        /// with an option to cancel the loop. Uses a ConcurrentQueue for Thread Safety.
+        /// </summary>
+        public static void VerifyBlockTypeInstancePropertiesConcurrently( int[] blockTypesIdToVerify, CancellationToken cancellationToken )
+        {
+            foreach ( var blockTypeId in blockTypesIdToVerify )
+            {
+                BlockTypeIdsToVerify.Enqueue( blockTypeId );
+            }
+
+            VerifyBlockTypeInstancePropertiesConcurrently( cancellationToken );
+        }
+
+        /// <summary>
+        /// Verifies the block type instance properties to make sure they are compiled and have the attributes updated,
+        /// with an option to cancel the loop. Uses a ConcurrentQueue for Thread Safety.
+        /// </summary>
+        public static void VerifyBlockTypeInstancePropertiesConcurrently( CancellationToken cancellationToken )
+        {
+            using ( var rockContext = new RockContext() )
+            {
+                while ( BlockTypeIdsToVerify.TryDequeue( out var blockTypeId ) )
+                {
+                    if ( cancellationToken.IsCancellationRequested == true )
+                    {
+                        return;
+                    }
+
+                    if ( BlockTypeCache.Get( blockTypeId )?.IsInstancePropertiesVerified == false )
+                    {
+                        var blockTypeCache = BlockTypeCache.Get( blockTypeId );
+                        Type blockCompiledType = blockTypeCache.GetCompiledType();
+
+                        RockBlock.CreateAttributes( rockContext, blockCompiledType, blockTypeId );
+                        BlockTypeCache.Get( blockTypeId )?.MarkInstancePropertiesVerified( true );
+                    }
                 }
             }
         }
