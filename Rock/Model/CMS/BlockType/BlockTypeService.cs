@@ -157,7 +157,7 @@ namespace Rock.Model
         /// Verifies the block type instance properties to make sure they are compiled and have the attributes updated,
         /// with an option to cancel the loop. Uses a ConcurrentQueue for Thread Safety.
         /// </summary>
-        public static void VerifyBlockTypeInstancePropertiesConcurrently( CancellationToken cancellationToken )
+        private static void VerifyBlockTypeInstancePropertiesConcurrently( CancellationToken cancellationToken )
         {
             using ( var rockContext = new RockContext() )
             {
