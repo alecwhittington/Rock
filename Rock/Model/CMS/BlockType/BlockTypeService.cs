@@ -23,7 +23,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading;
-
+using Rock.Attribute;
 using Rock.Blocks;
 using Rock.Data;
 using Rock.Web.Cache;
@@ -36,11 +36,6 @@ namespace Rock.Model
     /// </summary>
     public partial class BlockTypeService
     {
-        /// <summary>
-        /// The Ids of <see cref="BlockType"/> entities to compile during Rock startup.
-        /// </summary>
-        private static ConcurrentQueue<int> BlockTypeIdsToVerify = new ConcurrentQueue<int>();
-
         /// <summary>
         /// Gets a <see cref="Rock.Model.BlockType"/> by its Guid.
         /// </summary>
@@ -140,37 +135,39 @@ namespace Rock.Model
         }
 
         /// <summary>
-        /// Verifies the block type instance properties to make sure they are compiled and have the attributes updated,
-        /// with an option to cancel the loop. Uses a ConcurrentQueue for Thread Safety.
+        /// <para>
+        ///     <strong>Warning</strong>
+        ///     This method should be called only once during the
+        ///     application lifecycle and then only at Rock Startup.
+        /// </para>
+        /// Verifies the block type instance properties to make sure they are
+        /// compiled and have the attributes updated, with an option to cancel the loop.
+        /// Contrary to the <seealso cref="VerifyBlockTypeInstanceProperties(int[])"/> method;
+        /// this method doesn't perform any locking.
         /// </summary>
-        public static void VerifyBlockTypeInstancePropertiesConcurrently( int[] blockTypesIdToVerify, CancellationToken cancellationToken )
-        {
-            foreach ( var blockTypeId in blockTypesIdToVerify )
-            {
-                BlockTypeIdsToVerify.Enqueue( blockTypeId );
-            }
-
-            VerifyBlockTypeInstancePropertiesConcurrently( cancellationToken );
-        }
-
-        /// <summary>
-        /// Verifies the block type instance properties to make sure they are compiled and have the attributes updated,
-        /// with an option to cancel the loop. Uses a ConcurrentQueue for Thread Safety.
-        /// </summary>
-        private static void VerifyBlockTypeInstancePropertiesConcurrently( CancellationToken cancellationToken )
+        /// <remarks>
+        ///     <para>
+        ///         <strong>This is an internal API</strong> that supports the Rock
+        ///         infrastructure and not subject to the same compatibility standards
+        ///         as public APIs. It may be changed or removed without notice in any
+        ///         release and should therefore not be directly used in any plug-ins.
+        ///     </para>
+        /// </remarks>
+        [RockInternal( "1.16.4" )]
+        public static void VerifyBlockTypeInstancePropertiesForStartup( int[] blockTypeIdsToVerify, CancellationToken cancellationToken )
         {
             using ( var rockContext = new RockContext() )
             {
-                while ( BlockTypeIdsToVerify.TryDequeue( out var blockTypeId ) )
+                foreach ( var blockTypeId in blockTypeIdsToVerify )
                 {
                     if ( cancellationToken.IsCancellationRequested == true )
                     {
                         return;
                     }
 
+                    var blockTypeCache = BlockTypeCache.Get( blockTypeId );
                     if ( BlockTypeCache.Get( blockTypeId )?.IsInstancePropertiesVerified == false )
                     {
-                        var blockTypeCache = BlockTypeCache.Get( blockTypeId );
                         Type blockCompiledType = blockTypeCache.GetCompiledType();
 
                         RockBlock.CreateAttributes( rockContext, blockCompiledType, blockTypeId );

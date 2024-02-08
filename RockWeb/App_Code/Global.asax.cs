@@ -353,15 +353,15 @@ namespace RockWeb
         {
             Stopwatch stopwatchCompileBlockTypes = Stopwatch.StartNew();
 
-            // get a list of all block types that are used by blocks
-            var allUsedBlockTypeIds = new BlockTypeService( new RockContext() ).Queryable()
-                .AsNoTracking()
-                .Where( a => a.Blocks.Any() )
-                .Select( a => a.Id )
-                .ToArray();
-
             try
             {
+                // get a list of all block types that are used by blocks
+                var allUsedBlockTypeIds = new BlockTypeService( new RockContext() ).Queryable()
+                    .AsNoTracking()
+                    .Where( a => a.Blocks.Any() )
+                    .Select( a => a.Id )
+                    .ToArray();
+
                 BlockTypeCompilationThread = new Thread( () =>
                 {
                     // Set to background thread so that this thread doesn't prevent Rock from shutting down.
@@ -371,7 +371,7 @@ namespace RockWeb
                     Thread.CurrentThread.Priority = ThreadPriority.Lowest;
 
                     // Pass in a CancellationToken so we can stop compiling if Rock shuts down before it is done
-                    BlockTypeService.VerifyBlockTypeInstancePropertiesConcurrently( allUsedBlockTypeIds, _threadCancellationTokenSource.Token );
+                    BlockTypeService.VerifyBlockTypeInstancePropertiesForStartup( allUsedBlockTypeIds, _threadCancellationTokenSource.Token );
 
                     System.Diagnostics.Debug.WriteLine( string.Format( "[{0,5:#} seconds] {1} Block Types Compiled", stopwatchCompileBlockTypes.Elapsed.TotalSeconds, allUsedBlockTypeIds.Length ) );
                 } );
