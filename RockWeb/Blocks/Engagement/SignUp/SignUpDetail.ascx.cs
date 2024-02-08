@@ -2300,11 +2300,11 @@ namespace RockWeb.Blocks.Engagement.SignUp
 
                 if ( !anyGroupRequirements && !areSpecificGroupRequirementsEnabled )
                 {
-                    pnlEditGroupRequirements.Visible = false;
+                    wpGroupRequirements.Visible = false;
                     return;
                 }
 
-                pnlEditGroupRequirements.Visible = true;
+                wpGroupRequirements.Visible = true;
 
                 if ( anyGroupTypeGroupRequirements )
                 {
